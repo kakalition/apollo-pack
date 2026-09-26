@@ -13,11 +13,6 @@ own versions; the pack version is the root `VERSION` file.
   production-grade PDF with rich layout, tables, images, embedded fonts, a
   table of contents, multi-column sections, page headers/footers/watermarks,
   and optional encryption. Adds reportlab to the pack's per-skill requirements.
-- New `charting` skill: render shadcn/ui-style bar, line, area, pie, donut,
-  radar, and radial charts to PNG from a JSON spec with Recharts in headless
-  Chromium, and extract the equivalent shadcn/Recharts JSX. State, validation,
-  and reports are standard library Python; only rendering needs Node 20+ with
-  the skill's pinned `package.json`.
 
 ### Changed
 
@@ -35,8 +30,8 @@ own versions; the pack version is the root `VERSION` file.
   `page_break` option) so every section at a chosen heading level starts on its
   own page; breaks collapse at the top of a page so no blank page is added.
 - Repositioned the pack as a **self-development pack for agents**: README hero,
-  highlights, and a six-pillar overview (consistency, reflection, money,
-  learning, craft, visualization).
+  highlights, and a five-pillar overview (consistency, reflection, money,
+  learning, craft).
 - Refined `pdf-creator` page furniture to common print/UX best practice: the
   running header now sits about 0.5in from the top edge with a clear ~9mm gap
   between its rule and the first line of content, and the footer page number
@@ -45,6 +40,13 @@ own versions; the pack version is the root `VERSION` file.
   (<https://github.com/kakalition/nanobot-live-status>). The pack now contains
   Agent Skills only; `plugins/`, the plugin CI job, and the plugin release
   artifact were removed.
+
+### Removed
+
+- Removed the `charting` skill from the pack. It now lives as a standalone,
+  stateless MCP server at `~/Workspaces/agent-mcps/apollo-charting`, exposing
+  only `render_chart`, `validate_spec`, and `chart_component`; the pack README,
+  catalog, scheduling docs, and CI no longer reference it.
 
 ## [0.1.0] - 2026-09-26
 

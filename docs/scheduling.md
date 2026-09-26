@@ -21,12 +21,11 @@ See the [pack README](../README.md) for how to install the skills.
 | `skills/habit-tracker/` | `habit-tracker` | `reports.py schedule-hint` | `--db PATH` | daily |
 | `skills/journal/` | `journal` | `reports.py schedule-hint` | `--db PATH` | daily |
 | `skills/pdf-creator/` | `pdf-creator` | `render.py schedule-hint` | `--home DIR` | daily |
-| `skills/charting/` | `charting` | `render.py schedule-hint` | `--home DIR` | daily |
 
 `--home` is used by the skills whose data root holds more than one file
 (`daily-insight`: a SQLite file, a vector store, and an outbox; `pdf-creator`: a
-SQLite library plus `assets/`, `fonts/`, and `output/`; `charting`: a SQLite
-library plus `output/` and `tmp/`). The others take a single `--db PATH`.
+SQLite library plus `assets/`, `fonts/`, and `output/`). The others take a
+single `--db PATH`.
 Whichever flag applies, the resolved path is always echoed under the uniform
 `store` key.
 
@@ -227,12 +226,6 @@ default.
   that rewrites one output PDF, then a read-only `report` command
   (`reports.py history --limit 1`). Pass `--doc NAME` (or `--spec FILE`) and
   optionally `--out FILE`.
-- **charting** mirrors pdf-creator: a `post` command
-  (`render.py render --doc NAME --force`) rewrites one output PNG, then a
-  read-only `report` command (`reports.py history --limit 1`). Pass `--doc NAME`
-  (or `--spec FILE`) and optionally `--out FILE`. Rendering needs Node and the
-  built bundle, so an unattended job should be validated with
-  `render.py check --strict` first.
 
 ## Dry run every skill
 
@@ -254,10 +247,6 @@ python3 skills/journal/scripts/reports.py schedule-hint \
 python3 skills/pdf-creator/scripts/render.py schedule-hint \
   --doc invoice --out ~/invoices/current.pdf \
   --target nanobot --at-time 08:00 --tz Asia/Jakarta --name pdf-creator
-
-python3 skills/charting/scripts/render.py schedule-hint \
-  --doc revenue --out ~/reports/revenue.png \
-  --target nanobot --at-time 08:00 --tz Asia/Jakarta --name charting
 ```
 
 ## Conformance checklist for a new skill

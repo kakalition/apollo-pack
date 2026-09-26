@@ -1,32 +1,7 @@
 {
   "schemaVersion": 1,
-  "packVersion": "0.1.0",
+  "packVersion": "0.2.0",
   "items": [
-    {
-      "id": "charting",
-      "type": "skill",
-      "name": "charting",
-      "version": "1.0.0",
-      "description": "Render shadcn/ui-style charts (bar, line, area, pie, donut, radar, radial) to PNG with Recharts in headless Chromium, and extract the equivalent shadcn/Recharts JSX.",
-      "path": "skills/charting",
-      "license": "MIT",
-      "author": "kakalition (GitHub)",
-      "platforms": [
-        "linux",
-        "macos",
-        "windows"
-      ],
-      "tags": [
-        "Charts",
-        "Recharts",
-        "shadcn",
-        "Data Visualization",
-        "PNG",
-        "Local-First"
-      ],
-      "category": "productivity",
-      "docs": "skills/charting/SKILL.md"
-    },
     {
       "id": "daily-insight",
       "type": "skill",
