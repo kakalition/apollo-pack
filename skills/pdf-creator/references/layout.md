@@ -16,6 +16,11 @@ here are only suggestions.
 Headings are indexed for the table of contents and the PDF outline. Add `anchor`
 to link to a section from elsewhere with `[jump](#revenue)`.
 
+To give every section its own page, set `"page_break_headings": 1` at the top
+level (or use `[1, 2]` for two levels). A single heading can opt in with
+`"page_break": true`. Breaks collapse at the top of a page, so no blank pages
+appear.
+
 ## Rich text
 
 For precise inline control, list spans instead of a markup string:
@@ -149,7 +154,8 @@ Or state the columns explicitly: `"columns": [[{...}], [{...}]]`.
 ```
 
 At the top level, `"toc": { "title": "Contents" }` is inserted before the body
-automatically.
+automatically. Level-1 entries sit flush with the title; `toc2`/`toc3` indent
+deeper levels.
 
 ## Checkboxes, definitions, key/value grids
 

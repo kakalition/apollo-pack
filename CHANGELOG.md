@@ -21,6 +21,14 @@ own versions; the pack version is the root `VERSION` file.
 
 ### Changed
 
+- Fixed `pdf-creator` table-of-contents indentation: level-1 entries were
+  shifted right by one level (an off-by-one between heading levels and
+  reportlab's zero-based TOC styles), so entries did not line up with the
+  "Contents" title. Level-1 entries are now flush left and `toc2`/`toc3` indent
+  the levels they were written for.
+- Added `page_break_headings` to `pdf-creator` specs (and the per-heading
+  `page_break` option) so every section at a chosen heading level starts on its
+  own page; breaks collapse at the top of a page so no blank page is added.
 - Repositioned the pack as a **self-development pack for agents**: README hero,
   highlights, and a six-pillar overview (consistency, reflection, money,
   learning, craft, visualization).

@@ -124,6 +124,9 @@ A spec is a JSON object. The important keys:
 - `header`, `footer` — running text supporting `{page}`, `{pages}`, `{date}`,
   `{title}`, `{author}`.
 - `watermark`, `page_numbers`, `toc`, `cover`, `security`.
+- `number_headings` (auto-number headings) and `page_break_headings` (start
+  each heading at the given level on its own page — `1`, `[1, 2]`, or `true`);
+  a single heading can opt in with `"page_break": true`.
 - `content` — the ordered list of blocks.
 
 Every length accepts a unit suffix (`pt`, `px`, `in`, `cm`, `mm`, `pc`) or a

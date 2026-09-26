@@ -98,6 +98,9 @@ class Builder(BlocksA, BlocksB):
         self.number_headings = _lib.parse_bool(
             self.spec.get("number_headings", self.theme.get("number_headings", False)), False
         )
+        self.page_break_headings = self._parse_page_break_headings(
+            self.spec.get("page_break_headings", self.theme.get("page_break_headings"))
+        )
         self.heading_counters: Dict[int, int] = {}
         self.figure_seq = 0
         self.table_seq = 0
@@ -121,6 +124,38 @@ class Builder(BlocksA, BlocksB):
     def _spec_dict(self, key: str) -> Dict[str, Any]:
         value = self.spec.get(key)
         return value if isinstance(value, dict) else {}
+
+    @staticmethod
+    def _parse_page_break_headings(value: Any) -> set:
+        """Normalize ``page_break_headings`` into a set of heading levels.
+
+        Accepts ``true`` (break before every level-1 heading), a single level,
+        or a list of levels. Levels outside 1-6 are ignored.
+        """
+        if value is None or value is False:
+            return set()
+        if value is True:
+            return {1}
+        items = value if isinstance(value, (list, tuple, set)) else [value]
+        levels = set()
+        for item in items:
+            try:
+                level = int(item)
+            except (TypeError, ValueError):
+                continue
+            if 1 <= level <= 6:
+                levels.add(level)
+        return levels
+
+    def _heading_starts_page(self, block: Dict[str, Any]) -> bool:
+        """True when a heading asks to begin on a fresh page."""
+        if _lib.parse_bool(block.get("page_break"), False) or _lib.parse_bool(block.get("break_before"), False):
+            return True
+        try:
+            level = int(block.get("level", 1))
+        except (TypeError, ValueError):
+            return False
+        return level in self.page_break_headings
 
     def _resolve_theme(self) -> Tuple[str, Dict[str, Any]]:
         theme_spec = self.spec.get("theme")
@@ -671,13 +706,33 @@ class Builder(BlocksA, BlocksB):
         ):
             blocks.insert(0, dict(toc_config, type="toc"))
         flowables: List[Any] = []
+        # ``fresh`` is True while the next flowable would land at the top of a
+        # page, so a section break is only emitted when there is content to
+        # move off the current page. This keeps the first heading (and any
+        # heading right after the TOC's own page break) from adding a blank page.
+        fresh = True
         cover = self.spec.get("cover")
         if cover:
             flowables.append(self.rl.NextPageTemplate("body"))
             flowables.extend(self._cover_flowables(cover))
             flowables.append(self.rl.PageBreak())
+            fresh = True
         for block in blocks:
-            flowables.extend(self.block(block))
+            if (
+                isinstance(block, dict)
+                and str(block.get("type", "paragraph")) == "heading"
+                and self._heading_starts_page(block)
+                and not fresh
+            ):
+                flowables.append(self.rl.PageBreak())
+                fresh = True
+            produced = self.block(block)
+            flowables.extend(produced)
+            for flowable in produced:
+                if isinstance(flowable, self.rl.PageBreak):
+                    fresh = True
+                elif not isinstance(flowable, self.rl.NextPageTemplate):
+                    fresh = False
         if not flowables:
             flowables.append(self.rl.Spacer(1, 1))
         return flowables
@@ -822,7 +877,11 @@ def _doc_classes() -> Tuple[Any, Any]:
             except Exception:
                 pass
             try:
-                self.notify("TOCEntry", (level, text, self.page, key))
+                # reportlab indexes TOC levels from zero while heading levels
+                # start at one; pass the zero-based level so toc1 lines up with
+                # level-1 headings and the indented toc2/toc3 styles apply to
+                # the headings they were written for.
+                self.notify("TOCEntry", (level - 1, text, self.page, key))
             except Exception:
                 pass
 

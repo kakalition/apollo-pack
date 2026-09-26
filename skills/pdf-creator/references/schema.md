@@ -21,6 +21,7 @@ geometry, and turns `content` into a PDF. `spec_version` is `1`.
   "cover": { "title": "Quarterly Report", "subtitle": "...", "author": "...", "date": "..." },
   "security": { "user_password": "open", "can_copy": false },
   "number_headings": false,
+  "page_break_headings": 1,
   "content": [ /* blocks */ ]
 }
 ```
@@ -139,7 +140,18 @@ Optional per-template overrides keyed by template name (`body`, `cover`,
 
 When present at the top level (or as a `toc` block) the renderer indexes every
 heading, emits a table of contents with dot leaders, and adds PDF outline
-entries. Rendering is multi-pass so page numbers are correct.
+entries. Rendering is multi-pass so page numbers are correct. Level-1 headings
+align with the TOC title and use `toc1`; deeper levels use `toc2`/`toc3` with
+their built-in indent.
+
+## page breaks before headings
+
+`page_break_headings` starts every heading of the given level on a fresh page —
+the declarative way to give each section its own page. It accepts one level
+(`1`), a list (`[1, 2]`), or `true` for level 1. A single heading can also ask
+for it directly with `"page_break": true` (or `"break_before": true`). Breaks
+collapse when the page is already empty, so a leading heading and the first
+heading after the table of contents never produce a blank page.
 
 ## cover
 
@@ -171,7 +183,7 @@ paragraph. `type` defaults to `paragraph` when omitted. See
 
 | Type | Key options |
 |---|---|
-| `heading` | `text`, `level` 1–6, `number`, `anchor`, plus style shorthands |
+| `heading` | `text`, `level` 1–6, `number`, `anchor`, `page_break`, plus style shorthands |
 | `paragraph` | `text`, `allow_html`, style shorthands |
 | `rich` | `spans` of `{text, bold, italic, underline, strike, code, color, size, font, link, super, sub}` |
 | `list` | `ordered`, `items` (strings or `{text, items}`), `start`, `bullet` |

@@ -104,6 +104,19 @@ def png(w, h, rgb):
     '{"type":"paragraph","text":"Wide text. "}]}\n',
     encoding="utf-8",
 )
+(base / "sections_spec.json").write_text(
+    '{"spec_version":1,"meta":{"title":"Sections"},'
+    '"toc":{"title":"Contents","depth":2},"page_break_headings":1,'
+    '"content":[{"type":"heading","level":1,"text":"Alpha"},'
+    '{"type":"paragraph","text":"Alpha body."},'
+    '{"type":"heading","level":2,"text":"Alpha sub"},'
+    '{"type":"paragraph","text":"Alpha sub body."},'
+    '{"type":"heading","level":1,"text":"Beta"},'
+    '{"type":"paragraph","text":"Beta body."},'
+    '{"type":"heading","level":1,"text":"Gamma"},'
+    '{"type":"paragraph","text":"Gamma body."}]}\n',
+    encoding="utf-8",
+)
 PY
 
 # ===========================================================================
@@ -212,6 +225,9 @@ else
   check "layout render" "$(printf '%s' "$OUT" | jqv "d['data']['pages'] >= 2")" "True"
   check "tall image fits" "$(printf '%s' "$OUT" | jqv "len(d['data']['warnings'])")" "0"
 
+  OUT="$(run "$SCRIPTS/render.py" render --spec "$TMPDIR_SMOKE/sections_spec.json" --out "$TMPDIR_SMOKE/sections.pdf" --force)"
+  check "section render" "$(printf '%s' "$OUT" | jqv "d['data']['pages'] >= 4")" "True"
+
   if have_pypdf; then
     OUT="$(run "$SCRIPTS/reports.py" inspect "$TMPDIR_SMOKE/report.pdf")"
     check "inspect pages" "$(printf '%s' "$OUT" | jqv "d['data']['pages'] >= 2")" "True"
@@ -249,6 +265,49 @@ for page in reader.pages:
             header_ok = True
 if not (footer_ok and header_ok):
     raise SystemExit(1)
+PY
+    "$PY" - "$TMPDIR_SMOKE/sections.pdf" <<'PY' && pass || fail "TOC not flush left or sections not starting on their own pages"
+import sys
+from pypdf import PdfReader
+
+
+def tokens(page):
+    out = []
+
+    def visit(text, cm, tm, font, size):
+        token = text.strip()
+        if token:
+            out.append((token, tm[4]))
+
+    page.extract_text(visitor_text=visit)
+    return out
+
+
+pages = PdfReader(sys.argv[1]).pages
+toc = tokens(pages[0])
+
+
+def x_of(name):
+    values = [x for token, x in toc if token == name]
+    if len(values) != 1:
+        raise SystemExit(1)
+    return values[0]
+
+
+base = x_of("Contents")
+# Level-1 entries share the title's left edge; level 2 is indented from it.
+for name in ("Alpha", "Beta", "Gamma"):
+    if abs(x_of(name) - base) > 0.6:
+        raise SystemExit(1)
+if x_of("Alpha sub") - base < 8:
+    raise SystemExit(1)
+
+# Every level-1 section starts on its own page and no page is blank.
+expected = (("Alpha", ("Beta", "Gamma")), ("Beta", ("Alpha", "Gamma")), ("Gamma", ("Alpha", "Beta")))
+for index, (own, others) in enumerate(expected, start=1):
+    names = {token for token, x in tokens(pages[index])}
+    if not names or own not in names or any(other in names for other in others):
+        raise SystemExit(1)
 PY
   else
     printf 'SKIP: pypdf not installed; skipping PDF inspection checks\n'
