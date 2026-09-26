@@ -149,7 +149,9 @@ every render unless a spec overrides them.
 ② **Compose the spec.** Build a JSON object with `meta`, `page`, an optional
 `theme`, and a `content` list. Start from `templates.py spec report --out F` or
 another demo, then edit. Prefer semantic blocks (`heading`, `list`, `table`)
-over hand-placed spacing.
+over hand-placed spacing, and semantic controls over manual breaks: when the
+user wants every section on its own page, set `page_break_headings` to the
+section's heading level instead of inserting `page_break` blocks.
 
 ③ **Add assets when needed.** Register images and fonts once with
 `assets.py add-image` / `add-font`, then refer to them by bare file name
@@ -180,6 +182,10 @@ that re-renders a stored document; it installs nothing. See
   when unsure.
 - **Missing images fail the render.** A missing `src` returns `not_found` and
   writes no PDF. Use `check --strict` before rendering unattended jobs.
+- **Sections on their own page come from `page_break_headings`.** Set it to the
+  heading level (`1`, `[1, 2]`, or `true`); the renderer drops the break when
+  the page is already empty. A hand-placed `page_break` in front of every
+  section can add a blank page after the cover or table of contents.
 - **Remote images are off by default.** Fetching a URL needs `--allow-remote`
   (or `settings.py set --allow-remote yes`); local paths and `data:` URIs never
   need it.
