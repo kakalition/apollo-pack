@@ -13,8 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-        with:
-          python-version: "3.12"
       - name: Catalog is fresh
         run: uv run tools/catalog.py check
       - name: Build plugin wheel
