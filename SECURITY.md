@@ -19,9 +19,9 @@ reports within a few days.
 
 ## Scope
 
-This pack bundles independent Agent Skills and host plugins. Each item keeps
-its own license and, where present, its own security notes. Vulnerabilities in
-a host (for example nanobot) should be reported to that project.
+This pack bundles independent Agent Skills. Each skill keeps its own license
+and, where present, its own security notes. Vulnerabilities in a host (for
+example nanobot) should be reported to that project.
 
 ## Supported versions
 

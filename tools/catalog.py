@@ -175,14 +175,16 @@ def plugin_item(plugin_dir: Path) -> dict[str, Any]:
 def collect_items() -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     skills_root = REPO / "skills"
-    for skill_dir in sorted(p for p in skills_root.glob("*") if p.is_dir()):
-        skill_md = skill_dir / "SKILL.md"
-        if skill_md.is_file():
-            items.append(skill_item(skill_dir))
+    if skills_root.is_dir():
+        for skill_dir in sorted(p for p in skills_root.glob("*") if p.is_dir()):
+            skill_md = skill_dir / "SKILL.md"
+            if skill_md.is_file():
+                items.append(skill_item(skill_dir))
     plugins_root = REPO / "plugins"
-    for plugin_dir in sorted(p for p in plugins_root.glob("*") if p.is_dir()):
-        if (plugin_dir / "pyproject.toml").is_file():
-            items.append(plugin_item(plugin_dir))
+    if plugins_root.is_dir():
+        for plugin_dir in sorted(p for p in plugins_root.glob("*") if p.is_dir()):
+            if (plugin_dir / "pyproject.toml").is_file():
+                items.append(plugin_item(plugin_dir))
 
     seen: dict[str, str] = {}
     for item in items:

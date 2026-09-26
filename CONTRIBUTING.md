@@ -8,7 +8,6 @@ and checks that keep the pack consistent.
 ```
 apollo-pack/
 ├── skills/<id>/     # one Agent Skill per folder; <id> == frontmatter name
-├── plugins/<id>/    # one host plugin per folder
 ├── docs/            # cross-cutting documentation
 └── tools/           # pack tooling (catalog generator)
 ```
@@ -27,13 +26,6 @@ folder name matching the skill `name`.
    optional and passed through to the catalog.
 3. Keep `tests/smoke.sh` hermetic and runnable with `bash tests/smoke.sh`.
 4. Refresh the catalog (below).
-
-## Adding or changing a plugin
-
-Put the plugin at `plugins/<id>/` with a `pyproject.toml` that declares
-`project.name`, `project.version`, `project.description`, and `project.license`.
-Keep `ruff`, `mypy`, and `pytest` green. Bump the plugin's own version and
-update its `CHANGELOG.md` when its behavior changes.
 
 ## Catalog
 
@@ -56,14 +48,6 @@ bash skills/habit-tracker/tests/smoke.sh
 bash skills/journal/tests/smoke.sh
 bash skills/personal-finance/tests/smoke.sh
 bash skills/daily-insight/tests/smoke.sh   # needs skills/daily-insight/requirements.txt
-
-cd plugins/nanobot-live-status
-uv venv .venv --python 3.12
-uv pip install -e ".[dev]" --python .venv
-.venv/bin/ruff check .
-.venv/bin/ruff format --check .
-.venv/bin/mypy
-.venv/bin/pytest -q
 ```
 
 Pack CI runs the same set and a secret scan.

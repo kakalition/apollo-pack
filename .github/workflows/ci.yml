@@ -44,27 +44,6 @@ jobs:
       - name: Smoke test ${{ matrix.skill }}
         run: PY=.venv/bin/python bash "skills/${{ matrix.skill }}/tests/smoke.sh"
 
-  plugin:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: plugins/nanobot-live-status
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-      - name: Create environment and install plugin
-        run: |
-          uv venv --python 3.12
-          uv pip install -e ".[dev]"
-      - name: Lint
-        run: .venv/bin/ruff check .
-      - name: Format check
-        run: .venv/bin/ruff format --check .
-      - name: Typecheck
-        run: .venv/bin/mypy
-      - name: Tests
-        run: .venv/bin/pytest -q
-
   secrets:
     runs-on: ubuntu-latest
     steps:

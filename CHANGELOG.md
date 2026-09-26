@@ -12,6 +12,10 @@ own versions; the pack version is the root `VERSION` file.
 - Repositioned the pack as a **self-development pack for agents**: README hero,
   highlights, and a four-pillar overview (consistency, reflection, money,
   learning).
+- Extracted the `nanobot-live-status` plugin into its own repository
+  (<https://github.com/kakalition/nanobot-live-status>). The pack now contains
+  Agent Skills only; `plugins/`, the plugin CI job, and the plugin release
+  artifact were removed.
 
 ## [0.1.0] - 2026-09-26
 

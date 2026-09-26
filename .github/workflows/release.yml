@@ -15,11 +15,6 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - name: Catalog is fresh
         run: uv run tools/catalog.py check
-      - name: Build plugin wheel
-        run: |
-          uv venv --python 3.12
-          uv pip install build
-          .venv/bin/python -m build plugins/nanobot-live-status --outdir dist
       - name: Zip skills
         run: |
           mkdir -p dist

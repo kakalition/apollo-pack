@@ -10,8 +10,7 @@ This document defines the **scheduler-latch interface**: the uniform
 can latch any of them into a host scheduler (nanobot, hermes, ...) or an OS
 scheduler (crontab, systemd, launchd) without special-casing.
 
-See the [pack README](../README.md) for how to install the skills and the
-plugin.
+See the [pack README](../README.md) for how to install the skills.
 
 ## The skills
 

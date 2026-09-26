@@ -12,7 +12,7 @@
   <img alt="Self-development pack" src="https://img.shields.io/badge/self--development-pack-8A2BE2.svg">
   <a href="https://skills.sh"><img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-compatible-informational.svg"></a>
   <a href="catalog.json"><img alt="Catalog schema 1" src="https://img.shields.io/badge/catalog%20schema-1-blue.svg"></a>
-  <img alt="Python 3.9+ / 3.11+" src="https://img.shields.io/badge/python-3.9%2B%20%7C%203.11%2B-blue.svg">
+  <img alt="Python 3.9+" src="https://img.shields.io/badge/python-3.9%2B-blue.svg">
 </p>
 
 ---
@@ -23,7 +23,7 @@ Agents are good at *doing*. Self-development is about *continuing*: showing up
 daily, reflecting weekly, keeping money honest, and revisiting what you learned.
 That needs state an agent can trust and a person can own.
 
-`apollo-pack` gives an agent four focused, local-first tools for exactly that.
+`apollo-pack` gives an agent four focused, local-first skills for exactly that.
 Each skill is a set of standard-library Python scripts that print one JSON
 envelope per run, and all state lives in local SQLite files and vector stores —
 nothing is uploaded, and no skill installs, mutates, or talks to a scheduler on
@@ -33,7 +33,7 @@ its own.
   machine.
 - **Composable** — one uniform `schedule-hint` contract latches any skill into a
   host scheduler (nanobot, hermes, ...) or an OS scheduler.
-- **Discoverable** — every item's metadata generates one catalog
+- **Discoverable** — every skill's metadata generates one catalog
   (`catalog.json` plus the table below), validated in CI.
 
 ## The four pillars
@@ -51,9 +51,8 @@ local.
 
 ## Pack contents
 
-The table is generated from each item's metadata (`SKILL.md` frontmatter or
-`pyproject.toml`) and mirrored in `catalog.json`. After editing an item, refresh
-both:
+The table is generated from each skill's `SKILL.md` frontmatter and mirrored in
+`catalog.json`. After editing a skill, refresh both:
 
 ```bash
 uv run tools/catalog.py build
@@ -68,13 +67,10 @@ uv run tools/catalog.py check
 | daily-insight | skill | 1.0.0 | Deliver spaced, deduplicated insights from local sources. | `skills/daily-insight` | [SKILL.md](skills/daily-insight/SKILL.md) |
 | habit-tracker | skill | 1.0.0 | Track flexible-cadence habits with daily check-ins, neutral skips, and streak and adherence reports. | `skills/habit-tracker` | [SKILL.md](skills/habit-tracker/SKILL.md) |
 | journal | skill | 1.0.0 | Keep many free-form dated journal entries with full-text search and an agent-composed weekly review. | `skills/journal` | [SKILL.md](skills/journal/SKILL.md) |
-| nanobot-live-status | plugin | 0.1.0 | Show one rotating live-status sentence while a nanobot turn runs (Telegram). | `plugins/nanobot-live-status` | [README.md](plugins/nanobot-live-status/README.md) |
 | personal-finance | skill | 1.0.0 | Track personal money in a local SQLite ledger with one user-chosen currency. Use when logging or editing accounts, income, expenses, transfers, categories, budgets, or recurring bills, and when producing spending, cashflow, or net-worth reports or importing or exporting transactions as CSV. | `skills/personal-finance` | [SKILL.md](skills/personal-finance/SKILL.md) |
 <!-- catalog:end -->
 
 ## Install
-
-### Agent Skills
 
 Copy the skill folder into your host's skills directory so that
 `<skill-id>/SKILL.md` is discoverable. The folder name must stay the same as
@@ -94,25 +90,12 @@ Available skill ids: `daily-insight`, `habit-tracker`, `journal`, and
 `personal-finance`. Each skill README documents its own storage location,
 commands, and requirements.
 
-### nanobot plugin
-
-`plugins/nanobot-live-status` is a nanobot tool plugin. It must be installed
-into nanobot's own tool environment, not your project venv:
-
-```bash
-uv pip install --python "$(uv tool dir)/nanobot-ai/bin/python" ./plugins/nanobot-live-status
-```
-
-See [`plugins/nanobot-live-status/README.md`](plugins/nanobot-live-status/README.md)
-for configuration, verification, and removal.
-
 ## Requirements
 
 | Item | Requires |
 | --- | --- |
 | Skills | Python 3.9+ and the standard library |
 | `daily-insight` | optional `chromadb`, `pypdf`, `python-docx` for ingest and the vector store (`skills/daily-insight/requirements.txt`); read-only reports work without them |
-| `nanobot-live-status` | Python 3.11+ and `nanobot-ai >= 0.3.5, < 0.4` |
 | Pack tooling | Python 3.11+ with [`uv`](https://docs.astral.sh/uv/) (PyYAML is supplied via PEP 723) |
 
 ## Scheduler contract
@@ -129,7 +112,6 @@ apollo-pack/
 ├── assets/                 # logo and shared media
 ├── docs/scheduling.md      # the shared scheduler-latch contract
 ├── skills/<id>/            # one Agent Skill per folder (SKILL.md, scripts/, tests/)
-├── plugins/<id>/           # one host plugin per folder
 ├── tools/catalog.py        # catalog generator + validator (PEP 723)
 ├── catalog.json            # generated catalog (machine-readable)
 ├── VERSION                 # pack semver
@@ -148,15 +130,6 @@ bash skills/habit-tracker/tests/smoke.sh
 bash skills/journal/tests/smoke.sh
 bash skills/personal-finance/tests/smoke.sh
 bash skills/daily-insight/tests/smoke.sh   # needs skills/daily-insight/requirements.txt
-
-# Plugin: lint, typecheck, and test
-cd plugins/nanobot-live-status
-uv venv .venv --python 3.12
-uv pip install -e ".[dev]" --python .venv
-.venv/bin/ruff check .
-.venv/bin/ruff format --check .
-.venv/bin/mypy
-.venv/bin/pytest -q
 ```
 
 ## Security
@@ -171,8 +144,8 @@ on every push and pull request. To report a vulnerability, see
 
 Contributions are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the
 layout, metadata rules, and the checks to run. The catalog block above is
-generated — edit item metadata and rebuild rather than editing the table.
+generated — edit a skill's metadata and rebuild rather than editing the table.
 
 ## License
 
-MIT for the pack; each item retains its own license. See [`LICENSE`](LICENSE).
+MIT for the pack; each skill retains its own license. See [`LICENSE`](LICENSE).
