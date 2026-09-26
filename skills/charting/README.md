@@ -18,8 +18,12 @@ network access at render time.
 ## What it does
 
 - Renders a JSON chart spec to PNG with Recharts in headless Chromium.
-- Families: `bar` (grouped / stacked / horizontal), `line`, `area` (stacked,
-  gradient), `pie`, `donut`, `radar`, and `radial`.
+- Families: `bar`, `line`, `area`, `pie`, `donut`, `radar`, and `radial`.
+- The static variants of the shadcn/ui chart gallery: curve types (`linear`,
+  `step`, `monotone`), percentage `stacked`/`expand`, `axes` and `legend`
+  toggles, bar/line `labels`, `negative` and `active` bars, pie `separator`,
+  `label-list`, `donut`, and `stacked` rings, radar grid shapes and
+  `lines-only`, and radial `grid`, `labels`, and `stacked` rings.
 - Faithful shadcn styling: hairline grid, no axis lines, rounded bars, token
   palette (`--chart-1..5`), light and dark themes, card chrome, and a system
   sans-serif by default.
@@ -107,9 +111,9 @@ bundle, `render` fails fast with `dependency_missing`; every other verb works.
 }
 ```
 
-See `charting/references/schema.md` for the full reference,
-`references/charts.md` for per-family options, and `references/themes.md` for the
-tokens and palettes.
+See `references/schema.md` for the full reference, `references/charts.md` for
+per-family options and the gallery-variant knobs, and `references/themes.md` for
+the tokens and palettes.
 
 ## Where the data lives
 
@@ -118,7 +122,7 @@ Resolved in order: `--home DIR`, `$CHARTING_HOME`, then
 
 ```
 charting/
-├── charting.db   # chart library, settings, render history
+├── charting.db        # chart library, settings, render history
 ├── output/            # default PNG destination
 └── tmp/               # generated HTML (kept only with --keep-html)
 ```
@@ -147,7 +151,7 @@ python3 "$SKILL/scripts/render.py" schedule-hint \
 ```
 
 `schedule-hint` is read-only and installs nothing; it emits the commands and
-routes for your host to register. See `charting/references/scheduling.md`.
+routes for your host to register. See `references/scheduling.md`.
 
 ## Layout
 

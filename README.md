@@ -45,7 +45,7 @@ PDF renderer adds reportlab and the chart renderer adds Node + Playwright.
 | **Money** | `personal-finance` | Run a single-currency ledger: accounts, budgets, recurring bills, and spending, cashflow, and net-worth reports. |
 | **Learning** | `daily-insight` | Turn books, papers, and docs into a spaced, deduplicated stream of insights under a daily budget. |
 | **Craft** | `pdf-creator` | Turn a JSON spec or Markdown into a polished PDF: layout, tables, images, fonts, and page furniture. |
-| **Visualization** | `charting` | Render shadcn/ui-style bar, line, area, pie, donut, radar, and radial charts to PNG, and extract the Recharts JSX. |
+| **Visualization** | `charting` | Render shadcn/ui-style bar, line, area, pie, donut, radar, and radial charts — and the shadcn gallery variants — to PNG, and extract the Recharts JSX. |
 
 Each skill works on its own; together they give an agent a rounded picture of a
 person's growth and the documents they produce. Every skill runs under any Agent

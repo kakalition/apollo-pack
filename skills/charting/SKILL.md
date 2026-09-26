@@ -29,6 +29,10 @@ Python and keeps working without Node installed.
 
 - The user wants a polished, modern chart image: bar, line, area, pie, donut,
   radar, or radial.
+- The user wants a specific shadcn/ui gallery variant (a step or
+  stacked-expand area, negative or labeled bars, dotted or labeled lines,
+  label-list or stacked pie, circle/filled radar grids, radial rings, and so
+  on) as a static PNG.
 - The user wants the shadcn/ui look (hairline grid, no axis lines, rounded bars,
   token palette) exported as a PNG for a document, slide, or report.
 - The user wants the **react/recharts source** for a chart (`component`).
@@ -125,6 +129,13 @@ A spec is a JSON object. The important keys:
 - `legend` — `top`, `bottom` (default), `right`, or `none`; `grid`, `radius`,
   `curve`, `stacked`, `horizontal`, `gradient`, `fill_opacity`, `dot`,
   `background`, `card`.
+- Gallery-variant knobs — `expand`, `axes`, `labels`, `separator`,
+  `legend_values`, `active`, `negative`, `value_key_2`, `pie_stacked`,
+  `radar_grid`, `radar_grid_fill`, `radar_dots`, `fill`, `outer_radius`,
+  `radial_grid`, `radial_labels`, `radial_corner`, `radial_stacked`,
+  `center_label` / `center_total`. See `references/charts.md` for the mapping to
+  the shadcn/ui gallery (`Area Chart - Step`, `Area Chart - Stacked Expanded`,
+  `Bar Chart - Negative`, and so on).
 - `width`, `height`, `scale`, `padding` — output geometry. The PNG is
   `width*scale` × `height*scale` device pixels.
 - `title`, `description` — rendered as shadcn card chrome above the plot.
