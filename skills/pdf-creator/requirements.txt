@@ -1,0 +1,17 @@
+# Rendering dependencies for the pdf-creator skill.
+#
+# `reportlab` is required by render.py: it is the layout engine. Every other
+# verb (init, settings, documents, assets, templates, check, reports) is
+# standard library only and keeps working without it; they fail fast with a
+# `dependency_missing` error only when asked to render.
+#
+# `Pillow` is optional. When present it lets the renderer read extra image
+# formats (WebP, TIFF, HEIC via plugins), honor EXIF orientation, and downscale
+# oversized images; without it reportlab's built-in readers still cover PNG,
+# JPEG, GIF, and BMP.
+reportlab>=4.0
+Pillow>=10.0
+
+# Optional: only needed by `reports.py inspect` to read an existing PDF.
+# Uncomment if you want PDF introspection in addition to rendering.
+# pypdf>=4
