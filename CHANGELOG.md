@@ -26,6 +26,11 @@ own versions; the pack version is the root `VERSION` file.
   reportlab's zero-based TOC styles), so entries did not line up with the
   "Contents" title. Level-1 entries are now flush left and `toc2`/`toc3` indent
   the levels they were written for.
+- Fixed `pdf-creator` TOC and outline navigation: page furniture is drawn at
+  save time, which left reportlab's page counter at its initial value, so every
+  TOC link and bookmark pointed at the first page. The counter now tracks pages
+  during the build and restarts at one when the deferred pages are committed,
+  so links jump to the section they name.
 - Added `page_break_headings` to `pdf-creator` specs (and the per-heading
   `page_break` option) so every section at a chosen heading level starts on its
   own page; breaks collapse at the top of a page so no blank page is added.

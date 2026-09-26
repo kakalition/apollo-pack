@@ -269,6 +269,7 @@ PY
     "$PY" - "$TMPDIR_SMOKE/sections.pdf" <<'PY' && pass || fail "TOC not flush left or sections not starting on their own pages"
 import sys
 from pypdf import PdfReader
+from pypdf.generic import IndirectObject
 
 
 def tokens(page):
@@ -283,7 +284,8 @@ def tokens(page):
     return out
 
 
-pages = PdfReader(sys.argv[1]).pages
+reader = PdfReader(sys.argv[1])
+pages = reader.pages
 toc = tokens(pages[0])
 
 
@@ -308,6 +310,27 @@ for index, (own, others) in enumerate(expected, start=1):
     names = {token for token, x in tokens(pages[index])}
     if not names or own not in names or any(other in names for other in others):
         raise SystemExit(1)
+
+# TOC links and outline entries must resolve to the section pages, never back
+# to the TOC page itself.
+page_index = {page.indirect_reference.idnum: i for i, page in enumerate(pages)}
+for annot in pages[0].get("/Annots") or []:
+    dest = annot.get_object().get("/Dest")
+    if isinstance(dest, list) and dest and isinstance(dest[0], IndirectObject):
+        if page_index.get(dest[0].idnum) in (None, 0):
+            raise SystemExit(1)
+
+
+def outline_pages(items):
+    for item in items:
+        if isinstance(item, list):
+            yield from outline_pages(item)
+        else:
+            yield reader.get_destination_page_number(item)
+
+
+if not reader.outline or any(page == 0 for page in outline_pages(reader.outline)):
+    raise SystemExit(1)
 PY
   else
     printf 'SKIP: pypdf not installed; skipping PDF inspection checks\n'

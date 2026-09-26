@@ -846,10 +846,21 @@ def _doc_classes() -> Tuple[Any, Any]:
 
         def showPage(self) -> None:  # noqa: N802 - reportlab API
             self._saved_states.append(dict(self.__dict__))
+            # Pages are committed from save() so furniture can be drawn once the
+            # page total is known. Advance the document's page counter here
+            # anyway so bookmarks and outline entries created while building
+            # (TOC links) bind to the page they belong to instead of page 0.
+            # save() resets the counter before replaying so the committed pages
+            # keep the names those destinations refer to.
+            self._doc.pageCounter += 1
             self._startPage()
 
         def save(self) -> None:
             total = len(self._saved_states)
+            # Page names are 1-based ("Page1", "Page2", ...); restart the
+            # counter at 1 so the pages committed here keep the names the
+            # build-time bookmarks and outline entries refer to.
+            self._doc.pageCounter = 1
             for state in list(self._saved_states):
                 self.__dict__.update(state)
                 index = self._pageNumber - 1
