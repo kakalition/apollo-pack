@@ -1,0 +1,6 @@
+# Heavy, optional-for-read-only-use dependencies for the daily-insight skill.
+# Without these, init.py and ingest.py fail fast with a `dependency_missing`
+# error; the read-only reporting verbs still work on an existing data root.
+chromadb>=0.4,<2
+pypdf>=4
+python-docx>=1

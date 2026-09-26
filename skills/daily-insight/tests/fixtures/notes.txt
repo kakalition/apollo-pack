@@ -1,0 +1,7 @@
+Local-first software keeps the user's data on their own machine.
+
+A local index means queries work without a network round trip.
+
+Backups are a folder copy, and there is no vendor lock-in.
+
+The trade-off is sync: merging two offline edits is the hard part.

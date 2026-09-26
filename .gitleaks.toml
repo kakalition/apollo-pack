@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Redacted example configuration files contain placeholders, not secrets"
+paths = [
+  '''\.example\.json$''',
+]

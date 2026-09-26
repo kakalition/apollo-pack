@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "packVersion": "0.1.0",
+  "items": [
+    {
+      "id": "daily-insight",
+      "type": "skill",
+      "name": "daily-insight",
+      "version": "1.0.0",
+      "description": "Deliver spaced, deduplicated insights from local sources.",
+      "path": "skills/daily-insight",
+      "license": "MIT",
+      "author": "kakalition (GitHub)",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "tags": [
+        "Insights",
+        "Learning",
+        "Spaced-Repetition",
+        "Vector-Search",
+        "Scheduling"
+      ],
+      "category": "productivity",
+      "docs": "skills/daily-insight/SKILL.md"
+    },
+    {
+      "id": "habit-tracker",
+      "type": "skill",
+      "name": "habit-tracker",
+      "version": "1.0.0",
+      "description": "Track flexible-cadence habits with daily check-ins, neutral skips, and streak and adherence reports.",
+      "path": "skills/habit-tracker",
+      "license": "MIT",
+      "author": "kakalition (GitHub)",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "tags": [
+        "Habits",
+        "Streaks",
+        "Tracking",
+        "Scheduling",
+        "Local-First"
+      ],
+      "category": "productivity",
+      "docs": "skills/habit-tracker/SKILL.md"
+    },
+    {
+      "id": "journal",
+      "type": "skill",
+      "name": "journal",
+      "version": "1.0.0",
+      "description": "Keep many free-form dated journal entries with full-text search and an agent-composed weekly review.",
+      "path": "skills/journal",
+      "license": "MIT",
+      "author": "kakalition (GitHub)",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "tags": [
+        "Journal",
+        "Writing",
+        "Search",
+        "Weekly-Review",
+        "Local-First"
+      ],
+      "category": "productivity",
+      "docs": "skills/journal/SKILL.md"
+    },
+    {
+      "id": "nanobot-live-status",
+      "type": "plugin",
+      "name": "nanobot-live-status",
+      "version": "0.1.0",
+      "description": "Show one rotating live-status sentence while a nanobot turn runs (Telegram).",
+      "path": "plugins/nanobot-live-status",
+      "license": "MIT",
+      "author": "Kaka",
+      "tags": [
+        "nanobot",
+        "telegram",
+        "plugin",
+        "status",
+        "progress",
+        "agent"
+      ],
+      "docs": "plugins/nanobot-live-status/README.md"
+    },
+    {
+      "id": "personal-finance",
+      "type": "skill",
+      "name": "personal-finance",
+      "version": "1.0.0",
+      "description": "Track personal money in a local SQLite ledger with one user-chosen currency. Use when logging or editing accounts, income, expenses, transfers, categories, budgets, or recurring bills, and when producing spending, cashflow, or net-worth reports or importing or exporting transactions as CSV.",
+      "path": "skills/personal-finance",
+      "license": "MIT",
+      "author": "kakalition (GitHub)",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "tags": [
+        "Finance",
+        "Budgets",
+        "Ledger",
+        "CSV",
+        "Local-First"
+      ],
+      "category": "finance",
+      "docs": "skills/personal-finance/SKILL.md"
+    }
+  ]
+}
