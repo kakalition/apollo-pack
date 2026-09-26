@@ -1,37 +1,59 @@
 <div align="center">
   <img src="assets/apollo.png" alt="apollo-pack" width="160" height="160">
   <h1>apollo-pack</h1>
-  <p><strong>A pack of local-first Agent Skills and host plugins.</strong><br>
-  Discover, read, and install any item from one place.</p>
+  <p><strong>The self-development pack for agents.</strong><br>
+  Give your agent a private, local view of the person it works with — habits,
+  journal, money, and learning.</p>
 </div>
 
 <p align="center">
   <a href="https://github.com/kakalition/apollo-pack/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/kakalition/apollo-pack/actions/workflows/ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow.svg"></a>
-  <a href="catalog.json"><img alt="Catalog schema 1" src="https://img.shields.io/badge/catalog%20schema-1-blue.svg"></a>
+  <img alt="Self-development pack" src="https://img.shields.io/badge/self--development-pack-8A2BE2.svg">
   <a href="https://skills.sh"><img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-compatible-informational.svg"></a>
+  <a href="catalog.json"><img alt="Catalog schema 1" src="https://img.shields.io/badge/catalog%20schema-1-blue.svg"></a>
   <img alt="Python 3.9+ / 3.11+" src="https://img.shields.io/badge/python-3.9%2B%20%7C%203.11%2B-blue.svg">
 </p>
 
 ---
 
-`apollo-pack` bundles independent, local-first [Agent Skills](https://skills.sh)
-and host plugins behind one generated, CI-validated catalog. Skills are sets of
-standard-library Python scripts that print one JSON envelope per run; the
-bundled plugin is a small, guarded nanobot extension. No item installs, mutates,
-or talks to a scheduler on its own.
+## Why apollo-pack
 
-- **No lock-in** — skills run under any Agent Skills host, and the catalog is
-  plain JSON that any tool can read.
-- **Local-first by default** — state lives in local SQLite files and vector
-  stores; nothing is uploaded to a service.
-- **Metadata where it belongs** — each item owns its metadata (`SKILL.md`
-  frontmatter or `pyproject.toml`); no central hand-maintained list.
+Agents are good at *doing*. Self-development is about *continuing*: showing up
+daily, reflecting weekly, keeping money honest, and revisiting what you learned.
+That needs state an agent can trust and a person can own.
 
-## Catalog
+`apollo-pack` gives an agent four focused, local-first tools for exactly that.
+Each skill is a set of standard-library Python scripts that print one JSON
+envelope per run, and all state lives in local SQLite files and vector stores —
+nothing is uploaded, and no skill installs, mutates, or talks to a scheduler on
+its own.
 
-The table is generated from each item's metadata and mirrored in
-`catalog.json`. After editing an item, refresh both:
+- **Private by default** — your habits, journal, and ledger never leave the
+  machine.
+- **Composable** — one uniform `schedule-hint` contract latches any skill into a
+  host scheduler (nanobot, hermes, ...) or an OS scheduler.
+- **Discoverable** — every item's metadata generates one catalog
+  (`catalog.json` plus the table below), validated in CI.
+
+## The four pillars
+
+| Pillar | Skill | What your agent can do |
+| --- | --- | --- |
+| **Consistency** | `habit-tracker` | Track daily, weekly, and interval habits; log neutral skips; report streaks and adherence. |
+| **Reflection** | `journal` | Keep many dated entries, search them full-text, and compose a weekly review from your own words. |
+| **Money** | `personal-finance` | Run a single-currency ledger: accounts, budgets, recurring bills, and spending, cashflow, and net-worth reports. |
+| **Learning** | `daily-insight` | Turn books, papers, and docs into a spaced, deduplicated stream of insights under a daily budget. |
+
+Each skill works on its own; together they give an agent a rounded picture of a
+person's growth. Every skill runs under any Agent Skills host and keeps its data
+local.
+
+## Pack contents
+
+The table is generated from each item's metadata (`SKILL.md` frontmatter or
+`pyproject.toml`) and mirrored in `catalog.json`. After editing an item, refresh
+both:
 
 ```bash
 uv run tools/catalog.py build

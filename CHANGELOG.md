@@ -7,6 +7,12 @@ own versions; the pack version is the root `VERSION` file.
 
 ## [Unreleased]
 
+### Changed
+
+- Repositioned the pack as a **self-development pack for agents**: README hero,
+  highlights, and a four-pillar overview (consistency, reflection, money,
+  learning).
+
 ## [0.1.0] - 2026-09-26
 
 ### Added
