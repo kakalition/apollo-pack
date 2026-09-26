@@ -7,11 +7,27 @@ own versions; the pack version is the root `VERSION` file.
 
 ## [Unreleased]
 
+### Added
+
+- New `pdf-creator` skill: render a JSON document spec or a Markdown file to a
+  production-grade PDF with rich layout, tables, images, embedded fonts, a
+  table of contents, multi-column sections, page headers/footers/watermarks,
+  and optional encryption. Adds reportlab to the pack's per-skill requirements.
+- New `charting` skill: render shadcn/ui-style bar, line, area, pie, donut,
+  radar, and radial charts to PNG from a JSON spec with Recharts in headless
+  Chromium, and extract the equivalent shadcn/Recharts JSX. State, validation,
+  and reports are standard library Python; only rendering needs Node 20+ with
+  the skill's pinned `package.json`.
+
 ### Changed
 
 - Repositioned the pack as a **self-development pack for agents**: README hero,
-  highlights, and a four-pillar overview (consistency, reflection, money,
-  learning).
+  highlights, and a six-pillar overview (consistency, reflection, money,
+  learning, craft, visualization).
+- Refined `pdf-creator` page furniture to common print/UX best practice: the
+  running header now sits about 0.5in from the top edge with a clear ~9mm gap
+  between its rule and the first line of content, and the footer page number
+  sits about 0.5in from the bottom edge instead of high in the body.
 - Extracted the `nanobot-live-status` plugin into its own repository
   (<https://github.com/kakalition/nanobot-live-status>). The pack now contains
   Agent Skills only; `plugins/`, the plugin CI job, and the plugin release

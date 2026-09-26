@@ -1,13 +1,13 @@
 # Scheduler-latch contract
 
-Four local-first [Agent Skills](https://skills.sh), one per folder under
-`skills/`. Every skill is a set of standard-library Python scripts that print
-one JSON envelope per run; none of them ever installs, mutates, or talks to a
-scheduler on its own.
+Local-first [Agent Skills](https://skills.sh), one per folder under `skills/`.
+Every skill prints one JSON envelope per run; most are standard library only,
+while a skill with a heavy dependency declares it in its own `requirements.txt`.
+None of them ever installs, mutates, or talks to a scheduler on its own.
 
 This document defines the **scheduler-latch interface**: the uniform
-`schedule-hint` contract the four skills share, so one agent (or one script)
-can latch any of them into a host scheduler (nanobot, hermes, ...) or an OS
+`schedule-hint` contract the skills share, so one agent (or one script) can
+latch any of them into a host scheduler (nanobot, hermes, ...) or an OS
 scheduler (crontab, systemd, launchd) without special-casing.
 
 See the [pack README](../README.md) for how to install the skills.
@@ -20,10 +20,15 @@ See the [pack README](../README.md) for how to install the skills.
 | `skills/personal-finance/` | `personal-finance` | `recurring.py schedule-hint` | `--db PATH` | daily |
 | `skills/habit-tracker/` | `habit-tracker` | `reports.py schedule-hint` | `--db PATH` | daily |
 | `skills/journal/` | `journal` | `reports.py schedule-hint` | `--db PATH` | daily |
+| `skills/pdf-creator/` | `pdf-creator` | `render.py schedule-hint` | `--home DIR` | daily |
+| `skills/charting/` | `charting` | `render.py schedule-hint` | `--home DIR` | daily |
 
-`--home` is only used by `daily-insight`, whose data root holds a SQLite file,
-a vector store, and an outbox. That is the single intentional storage-flag
-difference; the resolved path is always echoed under the uniform `store` key.
+`--home` is used by the skills whose data root holds more than one file
+(`daily-insight`: a SQLite file, a vector store, and an outbox; `pdf-creator`: a
+SQLite library plus `assets/`, `fonts/`, and `output/`; `charting`: a SQLite
+library plus `output/` and `tmp/`). The others take a single `--db PATH`.
+Whichever flag applies, the resolved path is always echoed under the uniform
+`store` key.
 
 ## The contract
 
@@ -218,8 +223,18 @@ default.
   sets the report window.
 - **habit-tracker** and **journal** emit a single read-only `report` command
   (`reports.py due` / `reports.py week`); re-firing is always harmless.
+- **pdf-creator** emits a `post` command (`render.py render --doc NAME --force`)
+  that rewrites one output PDF, then a read-only `report` command
+  (`reports.py history --limit 1`). Pass `--doc NAME` (or `--spec FILE`) and
+  optionally `--out FILE`.
+- **charting** mirrors pdf-creator: a `post` command
+  (`render.py render --doc NAME --force`) rewrites one output PNG, then a
+  read-only `report` command (`reports.py history --limit 1`). Pass `--doc NAME`
+  (or `--spec FILE`) and optionally `--out FILE`. Rendering needs Node and the
+  built bundle, so an unattended job should be validated with
+  `render.py check --strict` first.
 
-## Dry run all four
+## Dry run every skill
 
 Each command prints an artifact and writes nothing to a scheduler:
 
@@ -235,6 +250,14 @@ python3 skills/habit-tracker/scripts/reports.py schedule-hint \
 
 python3 skills/journal/scripts/reports.py schedule-hint \
   --target nanobot --at-time 08:00 --tz Asia/Jakarta --name journal
+
+python3 skills/pdf-creator/scripts/render.py schedule-hint \
+  --doc invoice --out ~/invoices/current.pdf \
+  --target nanobot --at-time 08:00 --tz Asia/Jakarta --name pdf-creator
+
+python3 skills/charting/scripts/render.py schedule-hint \
+  --doc revenue --out ~/reports/revenue.png \
+  --target nanobot --at-time 08:00 --tz Asia/Jakarta --name charting
 ```
 
 ## Conformance checklist for a new skill
@@ -252,4 +275,5 @@ python3 skills/journal/scripts/reports.py schedule-hint \
    `add_command`, and still set `installs_nothing: true`.
 7. `references/scheduling.md` documents the target matrix; the smoke test
    checks `ok`, `installs_nothing`, path modes, the manage actions, and
-   executes the emitted command twice as a read-only no-op.
+   executes the emitted `report` command twice as a read-only no-op. A skill
+   whose `post` step writes a file must make that write idempotent.

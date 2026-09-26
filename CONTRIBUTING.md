@@ -12,10 +12,22 @@ apollo-pack/
 └── tools/           # pack tooling (catalog generator)
 ```
 
-Skills stay portable: `scripts/` must use the standard library only and must
-not name a specific host (no `nanobot`, `hermes`, `claude`, `codex`, or `kilo`
-tokens outside the documented scheduling files). Host discovery relies on the
-folder name matching the skill `name`.
+Skills stay portable: prefer the standard library. A skill that needs a heavy
+or optional package must declare it in a `requirements.txt` (as `daily-insight`
+and `pdf-creator` do) and keep its non-rendering verbs working without the
+package installed.
+
+A skill that needs a non-Python runtime declares the Node-assisted pattern
+instead (`charting`): commit `package.json` and `package-lock.json`, pin
+exact versions, gitignore `node_modules/` and any generated bundle, keep every
+state/library/validation verb in standard-library Python, and make only the
+render verb require Node — failing fast with a `dependency_missing` error that
+names the exact install command. Its smoke test must self-skip the render
+sections when the runtime is absent.
+
+Scripts must not name a specific host (no `nanobot`, `hermes`, `claude`,
+`codex`, or `kilo` tokens outside the documented scheduling files). Host
+discovery relies on the folder name matching the skill `name`.
 
 ## Adding or changing a skill
 
@@ -48,6 +60,8 @@ bash skills/habit-tracker/tests/smoke.sh
 bash skills/journal/tests/smoke.sh
 bash skills/personal-finance/tests/smoke.sh
 bash skills/daily-insight/tests/smoke.sh   # needs skills/daily-insight/requirements.txt
+bash skills/pdf-creator/tests/smoke.sh     # needs skills/pdf-creator/requirements.txt
+bash skills/charting/tests/smoke.sh   # Node 20+ and the built bundle gate the render checks
 ```
 
 Pack CI runs the same set and a secret scan.

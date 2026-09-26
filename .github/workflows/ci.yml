@@ -33,6 +33,8 @@ jobs:
             requirements: ""
           - skill: personal-finance
             requirements: ""
+          - skill: pdf-creator
+            requirements: skills/pdf-creator/requirements.txt
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -43,6 +45,24 @@ jobs:
         run: uv pip install -r "${{ matrix.requirements }}"
       - name: Smoke test ${{ matrix.skill }}
         run: PY=.venv/bin/python bash "skills/${{ matrix.skill }}/tests/smoke.sh"
+
+  charting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: skills/charting/package-lock.json
+      - name: Install pinned Node dependencies
+        run: npm ci --prefix skills/charting
+      - name: Build the chart bundle
+        run: node skills/charting/scripts/build.mjs
+      - name: Install Chromium
+        run: npx --prefix skills/charting playwright install --with-deps chromium
+      - name: Smoke test charting
+        run: bash skills/charting/tests/smoke.sh
 
   secrets:
     runs-on: ubuntu-latest

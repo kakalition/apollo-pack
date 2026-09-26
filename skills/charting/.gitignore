@@ -1,0 +1,18 @@
+# Node + React dependencies, fetched once by `init.py init --install`.
+node_modules/
+scripts/vendor/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Data / output
+*.db
+*.db-wal
+*.db-shm
+*.skill
+
+# Editors / OS
+.DS_Store

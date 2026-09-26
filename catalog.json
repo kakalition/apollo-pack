@@ -3,6 +3,31 @@
   "packVersion": "0.1.0",
   "items": [
     {
+      "id": "charting",
+      "type": "skill",
+      "name": "charting",
+      "version": "1.0.0",
+      "description": "Render shadcn/ui-style charts (bar, line, area, pie, donut, radar, radial) to PNG with Recharts in headless Chromium, and extract the equivalent shadcn/Recharts JSX.",
+      "path": "skills/charting",
+      "license": "MIT",
+      "author": "kakalition (GitHub)",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "tags": [
+        "Charts",
+        "Recharts",
+        "shadcn",
+        "Data Visualization",
+        "PNG",
+        "Local-First"
+      ],
+      "category": "productivity",
+      "docs": "skills/charting/SKILL.md"
+    },
+    {
       "id": "daily-insight",
       "type": "skill",
       "name": "daily-insight",
@@ -73,6 +98,32 @@
       ],
       "category": "productivity",
       "docs": "skills/journal/SKILL.md"
+    },
+    {
+      "id": "pdf-creator",
+      "type": "skill",
+      "name": "pdf-creator",
+      "version": "1.0.0",
+      "description": "Create production-grade PDFs from a JSON document spec or Markdown, with rich layout, tables, images, fonts, and page furniture.",
+      "path": "skills/pdf-creator",
+      "license": "MIT",
+      "author": "kakalition (GitHub)",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "tags": [
+        "PDF",
+        "Documents",
+        "Layout",
+        "Tables",
+        "Images",
+        "Typesetting",
+        "Local-First"
+      ],
+      "category": "productivity",
+      "docs": "skills/pdf-creator/SKILL.md"
     },
     {
       "id": "personal-finance",

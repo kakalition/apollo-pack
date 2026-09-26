@@ -3,7 +3,7 @@
   <h1>apollo-pack</h1>
   <p><strong>The self-development pack for agents.</strong><br>
   Give your agent a private, local view of the person it works with — habits,
-  journal, money, and learning.</p>
+  journal, money, learning, the documents it produces, and the charts it renders.</p>
 </div>
 
 <p align="center">
@@ -23,20 +23,20 @@ Agents are good at *doing*. Self-development is about *continuing*: showing up
 daily, reflecting weekly, keeping money honest, and revisiting what you learned.
 That needs state an agent can trust and a person can own.
 
-`apollo-pack` gives an agent four focused, local-first skills for exactly that.
-Each skill is a set of standard-library Python scripts that print one JSON
-envelope per run, and all state lives in local SQLite files and vector stores —
-nothing is uploaded, and no skill installs, mutates, or talks to a scheduler on
-its own.
+`apollo-pack` gives an agent six focused, local-first skills for exactly that.
+Each skill prints one JSON envelope per run, and all state lives in local SQLite
+files and vector stores — nothing is uploaded, and no skill installs, mutates,
+or talks to a scheduler on its own. Most skills are standard library only; the
+PDF renderer adds reportlab and the chart renderer adds Node + Playwright.
 
-- **Private by default** — your habits, journal, and ledger never leave the
-  machine.
+- **Private by default** — your habits, journal, ledger, and documents never
+  leave the machine.
 - **Composable** — one uniform `schedule-hint` contract latches any skill into a
   host scheduler (nanobot, hermes, ...) or an OS scheduler.
 - **Discoverable** — every skill's metadata generates one catalog
   (`catalog.json` plus the table below), validated in CI.
 
-## The four pillars
+## The pillars
 
 | Pillar | Skill | What your agent can do |
 | --- | --- | --- |
@@ -44,10 +44,12 @@ its own.
 | **Reflection** | `journal` | Keep many dated entries, search them full-text, and compose a weekly review from your own words. |
 | **Money** | `personal-finance` | Run a single-currency ledger: accounts, budgets, recurring bills, and spending, cashflow, and net-worth reports. |
 | **Learning** | `daily-insight` | Turn books, papers, and docs into a spaced, deduplicated stream of insights under a daily budget. |
+| **Craft** | `pdf-creator` | Turn a JSON spec or Markdown into a polished PDF: layout, tables, images, fonts, and page furniture. |
+| **Visualization** | `charting` | Render shadcn/ui-style bar, line, area, pie, donut, radar, and radial charts to PNG, and extract the Recharts JSX. |
 
 Each skill works on its own; together they give an agent a rounded picture of a
-person's growth. Every skill runs under any Agent Skills host and keeps its data
-local.
+person's growth and the documents they produce. Every skill runs under any Agent
+Skills host and keeps its data local.
 
 ## Pack contents
 
@@ -64,9 +66,11 @@ uv run tools/catalog.py check
 
 | Name | Type | Version | Description | Path | Docs |
 | --- | --- | --- | --- | --- | --- |
+| charting | skill | 1.0.0 | Render shadcn/ui-style charts (bar, line, area, pie, donut, radar, radial) to PNG with Recharts in headless Chromium, and extract the equivalent shadcn/Recharts JSX. | `skills/charting` | [SKILL.md](skills/charting/SKILL.md) |
 | daily-insight | skill | 1.0.0 | Deliver spaced, deduplicated insights from local sources. | `skills/daily-insight` | [SKILL.md](skills/daily-insight/SKILL.md) |
 | habit-tracker | skill | 1.0.0 | Track flexible-cadence habits with daily check-ins, neutral skips, and streak and adherence reports. | `skills/habit-tracker` | [SKILL.md](skills/habit-tracker/SKILL.md) |
 | journal | skill | 1.0.0 | Keep many free-form dated journal entries with full-text search and an agent-composed weekly review. | `skills/journal` | [SKILL.md](skills/journal/SKILL.md) |
+| pdf-creator | skill | 1.0.0 | Create production-grade PDFs from a JSON document spec or Markdown, with rich layout, tables, images, fonts, and page furniture. | `skills/pdf-creator` | [SKILL.md](skills/pdf-creator/SKILL.md) |
 | personal-finance | skill | 1.0.0 | Track personal money in a local SQLite ledger with one user-chosen currency. Use when logging or editing accounts, income, expenses, transfers, categories, budgets, or recurring bills, and when producing spending, cashflow, or net-worth reports or importing or exporting transactions as CSV. | `skills/personal-finance` | [SKILL.md](skills/personal-finance/SKILL.md) |
 <!-- catalog:end -->
 
@@ -86,9 +90,9 @@ Or install one with the [skills.sh](https://skills.sh) CLI:
 npx --yes skills@latest add kakalition/apollo-pack --skill habit-tracker --copy --yes
 ```
 
-Available skill ids: `daily-insight`, `habit-tracker`, `journal`, and
-`personal-finance`. Each skill README documents its own storage location,
-commands, and requirements.
+Available skill ids: `daily-insight`, `habit-tracker`, `journal`,
+`pdf-creator`, `personal-finance`, and `charting`. Each skill README
+documents its own storage location, commands, and requirements.
 
 ## Requirements
 
@@ -96,14 +100,16 @@ commands, and requirements.
 | --- | --- |
 | Skills | Python 3.9+ and the standard library |
 | `daily-insight` | optional `chromadb`, `pypdf`, `python-docx` for ingest and the vector store (`skills/daily-insight/requirements.txt`); read-only reports work without them |
+| `pdf-creator` | `reportlab` to render, plus optional `Pillow` and `pypdf` (`skills/pdf-creator/requirements.txt`); state, library, and validation verbs work without them |
+| `charting` | **Node 20+** with `react`, `recharts`, `playwright`, and `esbuild` (`skills/charting/package.json`) to render; every Python verb is standard library only and works without Node |
 | Pack tooling | Python 3.11+ with [`uv`](https://docs.astral.sh/uv/) (PyYAML is supplied via PEP 723) |
 
 ## Scheduler contract
 
-The four skills share one uniform `schedule-hint` interface, so a single agent
-(or script) can latch any of them into a host scheduler or an OS scheduler
-without special-casing. See [`docs/scheduling.md`](docs/scheduling.md) for the
-envelope, flags, targets, and per-skill notes.
+The skills share one uniform `schedule-hint` interface, so a single agent (or
+script) can latch any of them into a host scheduler or an OS scheduler without
+special-casing. See [`docs/scheduling.md`](docs/scheduling.md) for the envelope,
+flags, targets, and per-skill notes.
 
 ## Repository layout
 
@@ -130,6 +136,8 @@ bash skills/habit-tracker/tests/smoke.sh
 bash skills/journal/tests/smoke.sh
 bash skills/personal-finance/tests/smoke.sh
 bash skills/daily-insight/tests/smoke.sh   # needs skills/daily-insight/requirements.txt
+bash skills/pdf-creator/tests/smoke.sh     # needs skills/pdf-creator/requirements.txt (optional pypdf adds inspect checks)
+bash skills/charting/tests/smoke.sh   # needs Node 20+ and the built bundle for the render checks
 ```
 
 ## Security
